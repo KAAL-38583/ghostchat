@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=1024"/> <!-- Fuerza modo escritorio -->
+  <meta name="viewport" content="width=1024"/>
   <title>GhostChat</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,33 +22,9 @@
     #room-info {
       user-select: text !important;
     }
-
-    #console-warning {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 99999;
-      width: 100%;
-      height: 100%;
-      background: black;
-      color: #ff00ff;
-      font-size: 2rem;
-      font-family: "Bebas Neue", sans-serif;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      text-align: center;
-    }
   </style>
 </head>
 <body oncontextmenu="return false" ondragstart="return false">
-  <div id="console-warning">
-    🚫 Consola abierta detectada<br/>
-    Por razones de seguridad GhostChat ha sido bloqueado.
-  </div>
-
   <div id="app">
     <div class="sidebar">
       <h1>G H O S T C H A T</h1>
@@ -64,7 +40,6 @@
     <div class="chat-area">
       <div id="chat" style="display: none; flex: 1; display: flex; flex-direction: column; height: 100%;">
         <div id="messages" style="flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem;"></div>
-
         <div class="message-input" style="display: flex; gap: 1rem; padding: 1rem; align-items: center;">
           <input id="msgInput" class="neon-input" placeholder="ESCRIBE UN MENSAJE..." autocomplete="off"
             style="flex: 1; height: 3.5rem; padding: 0 1rem; border-radius: 8px;" />
@@ -81,20 +56,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    (function () {
-      let shown = false;
-      const element = new Image();
-      Object.defineProperty(element, 'id', {
-        get: function () {
-          if (!shown) {
-            document.getElementById('console-warning').style.display = 'flex';
-            shown = true;
-          }
-        }
-      });
-      console.log('%c', element);
-    })();
-
+    // 🔐 Bloqueo combinaciones peligrosas
     document.addEventListener('keydown', e => {
       const keys = ['F12', 'F5'];
       if (keys.includes(e.key) || (e.ctrlKey && ['u', 's', 'S', 'U', 'c', 'C', 'r', 'R'].includes(e.key))) {
@@ -116,13 +78,13 @@
         overlay.style.zIndex = '9999';
         document.body.appendChild(overlay);
         setTimeout(() => {
-        document.body.removeChild(overlay);
-        socket.emit('screenshot-detected');
+          document.body.removeChild(overlay);
+          alert('CAPTURA DE PANTALLA BLOQUEADA. SALA ELIMINADA.');
+          socket.emit('screenshot-detected');
         }, 700);
       }
     });
 
-    // === APP ===
     const socket = io();
     const createBtn = document.getElementById('createBtn');
     const joinBtn = document.getElementById('joinBtn');
@@ -189,7 +151,6 @@
       });
     };
 
-    // 🔐 Cifrado E2E
     function getEncryptionKey(roomId) {
       return CryptoJS.SHA256(roomId).toString().substring(0, 32);
     }
