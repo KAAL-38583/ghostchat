@@ -1,0 +1,364 @@
+/* RESET GENERAL */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+input, textarea,
+#room-info {
+  user-select: text !important;
+}
+
+/* BLOQUEO PARA IMPRIMIR */
+@media print {
+  body {
+    display: none;
+  }
+}
+
+/* BLOQUEO DE DRAG */
+body {
+  -webkit-user-drag: none;
+  font-family: "Bebas Neue", sans-serif;
+  background: #000;
+  color: #00ffea;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  z-index: 0;
+}
+
+/* EFECTO SCANLINES */
+body::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 255, 234, 0.02),
+    rgba(0, 255, 234, 0.02) 1px,
+    transparent 1px,
+    transparent 2px
+  );
+  z-index: 1;
+  pointer-events: none;
+  animation: scanlines 1s linear infinite;
+}
+
+@keyframes scanlines {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 2px; }
+}
+
+/* CONTENEDOR PRINCIPAL */
+#app {
+  z-index: 2;
+  background: #0a0a0a;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 95%;
+  height: 85%;
+  max-width: 1200px;
+  box-shadow:
+    0 0 25px #ff00ff33,
+    0 0 40px #00ffff33,
+    inset 0 0 10px #00ffea33;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+}
+
+/* SECCIÓN IZQUIERDA */
+.sidebar {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h1 {
+  text-align: center;
+  font-size: 2.8rem;
+  color: #00ffff;
+  text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+  margin-bottom: 1rem;
+}
+
+#room-info {
+  word-break: break-word;
+  font-weight: bold;
+  color: #00ffea;
+  margin: 1rem 0;
+}
+
+.sidebar p {
+  font-size: 0.95rem;
+  margin: 0.5rem 0;
+}
+
+/* CENTRAR BOTÓN */
+#createBtn {
+  align-self: center;
+  margin-top: 1rem;
+}
+
+/* INPUTS Y BOTONES NEÓN */
+input,
+button {
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: none;
+}
+
+.neon-input {
+  background: #111;
+  color: #00ffea;
+  padding: 0.8rem 1rem;
+  box-shadow: 0 0 10px #00ffea, 0 0 20px #00ffea;
+  margin: 0.5rem 0;
+  width: 100%;
+  outline: none;
+  caret-color: #ff00ff;
+}
+
+.neon-btn {
+  background: #ff00ff;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  margin: 0.5rem 0;
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+  cursor: pointer;
+  transition: 0.3s ease;
+  width: 100%;
+}
+
+.neon-btn:hover {
+  background: #00ffea;
+  color: black;
+  box-shadow: 0 0 20px #00ffea, 0 0 40px #00ffea;
+}
+
+/* ÁREA DE CHAT */
+.chat-area {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* MENSAJES */
+#messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.message {
+  max-width: 80%;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  word-wrap: break-word;
+  font-size: 1rem;
+  text-shadow: 0 0 5px currentColor;
+  animation: flicker 3s infinite;
+}
+
+.message.me {
+  align-self: flex-end;
+  background-color: #ff00ff;
+  color: white;
+  border-bottom-right-radius: 0;
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+}
+
+.message.other {
+  align-self: flex-start;
+  background-color: #111;
+  color: #00ffea;
+  border-bottom-left-radius: 0;
+  box-shadow: 0 0 10px #00ffea, 0 0 20px #00ffea;
+}
+
+/* INPUT Y BOTÓN DE ENVIAR */
+.message-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+#msgInput {
+  flex: 1;
+  height: 3.5rem;
+  padding: 0 1rem;
+  background-color: #111;
+  color: #00ffea;
+  box-shadow: 0 0 10px #00ffea;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+#sendBtn {
+  height: 3.5rem;
+  padding: 0 1.5rem;
+  background: #ff00ff;
+  color: white;
+  cursor: pointer;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #ff00ff, 0 0 30px #ff00ff;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: 1rem;
+  border: none;
+  transition: 0.3s ease;
+  white-space: nowrap;
+  flex-shrink: 0;
+  max-width: 200px;
+}
+
+#sendBtn:hover {
+  background: #00ffea;
+  color: black;
+  box-shadow: 0 0 20px #00ffea, 0 0 40px #00ffea;
+}
+
+/* EFECTO PARPADEO NEÓN */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.65; }
+  60% { opacity: 0.75; }
+  70% { opacity: 0.5; }
+  80% { opacity: 0.8; }
+}
+
+/* SCROLLBAR PERSONALIZADA */
+#messages::-webkit-scrollbar {
+  width: 8px;
+}
+
+#messages::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+
+#messages::-webkit-scrollbar-thumb {
+  background: #00ffea;
+  border-radius: 4px;
+}
+
+#messages::-webkit-scrollbar-thumb:hover {
+  background: #ff00ff;
+}
+
+/* EFECTO GLOW PARA EL CONTENEDOR DE CHAT */
+.chat-area::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 10px;
+  box-shadow: 
+    inset 0 0 15px #00ffea33,
+    inset 0 0 30px #ff00ff33;
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* ─── 📱 ESTILOS RESPONSIVOS PARA CELULARES Y TABLETS ─── */
+
+@media screen and (max-width: 1024px) {
+  #app {
+    flex-direction: column;
+    padding: 1rem;
+    height: 100vh;
+  }
+
+  .sidebar {
+    width: 100%;
+    max-width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .sidebar h1 {
+    font-size: 2.5rem;
+  }
+
+  .neon-btn,
+  .neon-input {
+    width: 90%;
+    font-size: 1rem;
+  }
+
+  #createBtn {
+    align-self: center;
+    margin: 1rem auto 0 auto;
+  }
+
+  #room-info {
+    font-size: 0.9rem;
+    word-break: break-word;
+  }
+
+  .chat-area {
+    width: 100%;
+    margin-top: 1rem;
+    flex: 1;
+  }
+
+  .message-input {
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.8rem;
+  }
+
+  #msgInput,
+  #sendBtn {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  #sendBtn {
+    padding: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .sidebar h1 {
+    font-size: 2rem;
+  }
+
+  #msgInput {
+    height: 3rem;
+    font-size: 0.9rem;
+  }
+
+  #sendBtn {
+    font-size: 0.9rem;
+    height: 3rem;
+  }
+
+  .message {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.9rem;
+  }
+}

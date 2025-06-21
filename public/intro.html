@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GhostChat - Intro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: black;
+      color: white;
+      font-family: "Bebas Neue", sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      text-align: center;
+      padding: 1rem;
+    }
+
+    h1 {
+      font-size: 10rem;
+      animation: titleGlow 5s infinite;
+      transform: scaleX(1.0);
+    }
+
+    @keyframes titleGlow {
+      0% {
+        color: #00ff00;
+        text-shadow: 0 0 10px #00ff00;
+      }
+      33% {
+        color: #00ffff;
+        text-shadow: 0 0 10px #00ffff;
+      }
+      66% {
+        color: #0000ff;
+        text-shadow: 0 0 10px #0000ff;
+      }
+      100% {
+        color: #00ff00;
+        text-shadow: 0 0 10px #00ff00;
+      }
+    }
+
+    .buttons {
+      margin-top: 3rem;
+      display: flex;
+      gap: 4rem;
+    }
+
+    .buttons button {
+      background: none;
+      border: none;
+      font-size: 2.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      font-family: "Bebas Neue", sans-serif;
+      transition: transform 0.2s;
+    }
+
+    .buttons button:nth-child(1) {
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff;
+    }
+
+    .buttons button:nth-child(2) {
+      color: #ff0000;
+      text-shadow: 0 0 10px #ff0000;
+    }
+
+    .buttons button:hover {
+      transform: scale(1.3);
+    }
+
+    .info {
+      margin-top: 2.5rem;
+      color: #ccc;
+      font-size: 1rem;
+      max-width: 600px;
+      line-height: 1.5;
+    }
+
+    .info a {
+      color: #00ffff;
+      text-decoration: underline;
+    }
+
+    .info a:hover {
+      color: #ff00ff;
+    }
+  </style>
+</head>
+<body>
+  <h1>G H O S T C H A T</h1>
+
+  <div class="buttons">
+    <button onclick="window.location.href='index.html?mode=create'">CREAR</button>
+    <button onclick="window.location.href='index.html?mode=join'">UNIRSE</button>
+  </div>
+
+  <div class="info">
+    <p><strong>GhostChat</strong> No es una red social. No es una app de mensajería común. Es un portal privado, efímero y sin rastros. Entras, hablas, y desapareces. Nadie sabrá que estuviste allí.</p>
+    <p>Al utilizar este servicio, aceptas los <a href="terminos.html" target="_blank">Términos y Condiciones</a></p>
+  </div>
+</body>
+</html>

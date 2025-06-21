@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GhostChat</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' ws:;">
+  <style>
+    body {
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+    }
+
+    input#joinInput,
+    #room-info {
+      user-select: text !important;
+    }
+  </style>
+</head>
+<body oncontextmenu="return false" ondragstart="return false">
+  <div id="app">
+    <div class="sidebar">
+      <h1>G H O S T C H A T</h1>
+      <p id="room-info" style="font-weight: bold; color: #00bfa5;"></p>
+      <p id="mode-label" style="color: #888; font-size: 0.9rem;"></p>
+      <p id="status" style="font-size: 0.9rem; color: red;"></p>
+
+      <button id="createBtn" class="neon-btn">CREAR SALA</button>
+      <input id="joinInput" class="neon-input" placeholder="ID DE LA SALA" autocomplete="off" />
+      <button id="joinBtn" class="neon-btn">UNIRSE</button>
+    </div>
+
+    <div class="chat-area">
+      <div id="chat" style="display: none; flex: 1; display: flex; flex-direction: column; height: 100%;">
+        <div id="messages" style="flex: 1; overflow-y: auto; padding: 1rem; display: flex; flex-direction: column; gap: 0.5rem;"></div>
+        <div class="message-input" style="display: flex; gap: 1rem; padding: 1rem; align-items: center;">
+          <input id="msgInput" class="neon-input" placeholder="ESCRIBE UN MENSAJE..." autocomplete="off"
+            style="flex: 1; height: 3.5rem; padding: 0 1rem; border-radius: 8px;" />
+          <button id="sendBtn" class="neon-btn" style="height: 3.5rem; padding: 0 1.5rem; border-radius: 8px;">ENVIAR</button>
+        </div>
+      </div>
+
+      <div id="end-screen" style="display:none; text-align:center; margin-top: 2rem;">
+        <h2 id="end-message" style="font-family: 'Share Tech Mono', monospace; font-size: 2rem; text-shadow: 0 0 5px #00ffea, 0 0 15px #ff00ff;">CONEXIÓN FINALIZADA</h2>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    // 🔐 Bloqueo combinaciones peligrosas y consola
+    document.addEventListener('keydown', e => {
+      const keys = ['F12', 'F5'];
+      if (keys.includes(e.key) || (e.ctrlKey && ['u', 's', 'S', 'U', 'c', 'C', 'r', 'R'].includes(e.key))) {
+        e.preventDefault();
+      }
+    });
+
+    // 🧠 Detección de PrintScreen
+    document.addEventListener('keyup', e => {
+      if (e.key === 'PrintScreen') {
+        const overlay = document.createElement('div');
+        overlay.style.position = 'fixed';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backdropFilter = 'blur(20px)';
+        overlay.style.background = 'rgba(0,0,0,0.5)';
+        overlay.style.zIndex = '9999';
+        document.body.appendChild(overlay);
+        setTimeout(() => {
+          document.body.removeChild(overlay);
+          alert('CAPTURA DE PANTALLA BLOQUEADA. SALA ELIMINADA.');
+          socket.emit('screenshot-detected');
+        }, 700);
+      }
+    });
+
+    // 🕵️ Detección básica de consola abierta
+    (function () {
+      const devtools = /./;
+      devtools.toString = function () {
+        this.opened = true;
+      };
+      setInterval(() => {
+        console.log('%c', devtools);
+        if (devtools.opened) {
+          alert("⚠️ Consola detectada. Redirigiendo por seguridad.");
+          window.location.href = "https://google.com";
+        }
+      }, 2000);
+    })();
+
+    // === APP
+    const socket = io();
+    const createBtn = document.getElementById('createBtn');
+    const joinBtn = document.getElementById('joinBtn');
+    const joinInput = document.getElementById('joinInput');
+    const chatDiv = document.getElementById('chat');
+    const messages = document.getElementById('messages');
+    const msgInput = document.getElementById('msgInput');
+    const sendBtn = document.getElementById('sendBtn');
+    const roomInfo = document.getElementById('room-info');
+    const status = document.getElementById('status');
+    const modeLabel = document.getElementById('mode-label');
+    const endScreen = document.getElementById('end-screen');
+    const endMessage = document.getElementById('end-message');
+
+    let currentRoom = null;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const mode = urlParams.get('mode');
+
+    if (mode === 'create') {
+      joinInput.style.display = 'none';
+      joinBtn.style.display = 'none';
+      modeLabel.textContent = 'Modo anfitrión: crear sala';
+      window.addEventListener('load', () => {
+        createBtn.click();
+      });
+    }
+
+    if (mode === 'join') {
+      createBtn.style.display = 'none';
+      modeLabel.textContent = 'Modo invitado: unirse a una sala';
+    }
+
+    socket.on('connect', () => {
+      status.textContent = 'Conectado';
+      status.style.color = '#00bfa5';
+    });
+
+    socket.on('disconnect', () => {
+      status.textContent = 'Desconectado del servidor';
+      status.style.color = '#ff4444';
+    });
+
+    createBtn.onclick = () => {
+      socket.emit('create-room', roomId => {
+        currentRoom = roomId;
+        roomInfo.textContent = 'ID de sala: ' + roomId;
+        chatDiv.style.display = 'flex';
+        messages.innerHTML = '';
+      });
+    };
+
+    joinBtn.onclick = () => {
+      const roomId = joinInput.value;
+      socket.emit('join-room', roomId, res => {
+        if (res.success) {
+          currentRoom = roomId;
+          roomInfo.textContent = 'ID de sala: ' + roomId;
+          chatDiv.style.display = 'flex';
+          messages.innerHTML = '';
+        } else {
+          alert('No se pudo unir a la sala');
+        }
+      });
+    };
+
+    // 🔐 Cifrado E2E
+    function getEncryptionKey(roomId) {
+      return CryptoJS.SHA256(roomId).toString().substring(0, 32);
+    }
+
+    function encryptMessage(message, key) {
+      return CryptoJS.AES.encrypt(message, key).toString();
+    }
+
+    function decryptMessage(encrypted, key) {
+      try {
+        const bytes = CryptoJS.AES.decrypt(encrypted, key);
+        return bytes.toString(CryptoJS.enc.Utf8);
+      } catch {
+        return '[MENSAJE CORRUPTO]';
+      }
+    }
+
+    sendBtn.onclick = sendMessage;
+    msgInput.addEventListener('keypress', e => {
+      if (e.key === 'Enter') sendMessage();
+    });
+
+    function sendMessage() {
+      const message = msgInput.value.trim();
+      if (message && currentRoom) {
+        const key = getEncryptionKey(currentRoom);
+        const encrypted = encryptMessage(message, key);
+
+        const msgElement = document.createElement('div');
+        msgElement.textContent = message;
+        msgElement.className = 'message me';
+        messages.appendChild(msgElement);
+        messages.scrollTop = messages.scrollHeight;
+
+        socket.emit('send-message', { roomId: currentRoom, message: encrypted });
+        msgInput.value = '';
+      }
+    }
+
+    socket.on('receive-message', encrypted => {
+      const key = getEncryptionKey(currentRoom);
+      const decrypted = decryptMessage(encrypted, key);
+
+      const msgElement = document.createElement('div');
+      msgElement.textContent = decrypted;
+      msgElement.className = 'message other';
+      messages.appendChild(msgElement);
+      messages.scrollTop = messages.scrollHeight;
+    });
+
+    socket.on('room-closed', message => {
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 5000);
+      chatDiv.style.display = 'none';
+      endScreen.style.display = 'block';
+      endMessage.textContent = message || "CONEXIÓN FINALIZADA";
+
+      let colors = ['#00ff00', '#00ffff', '#0000ff', '#00ff00'];
+      let i = 0;
+      setInterval(() => {
+        endMessage.style.transition = 'color 1.0s ease, text-shadow 1.5s ease';
+        endMessage.style.color = colors[i % colors.length];
+        endMessage.style.textShadow = `0 0 15px ${colors[i % colors.length]}, 0 0 30px ${colors[i % colors.length]}`;
+        i++;
+      }, 1500);
+    });
+  </script>
+</body>
+</html>
