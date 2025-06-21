@@ -282,3 +282,130 @@ button {
   pointer-events: none;
   z-index: -1;
 }
+
+/* ===== MÓVILES PEQUEÑOS (≤480px) ===== */
+@media (max-width: 480px) {
+  #app {
+    flex-direction: column;
+    padding: 0.5rem;
+    gap: 0.5rem;
+    height: 100vh;
+  }
+  .sidebar {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #00ffff33;
+  }
+  .sidebar h1 {
+    font-size: 2rem;
+  }
+  .neon-input, .neon-btn {
+    width: 100%;
+    font-size: 0.9rem;
+    padding: 0.6rem;
+  }
+  #room-info, #mode-label, #status {
+    font-size: 0.8rem;
+  }
+  .chat-area {
+    flex: 1;
+  }
+  #messages {
+    padding: 0.5rem;
+  }
+  .message {
+    font-size: 0.85rem;
+    max-width: 85%;
+  }
+  .message-input {
+    position: sticky;
+    bottom: 0;
+    padding: 0.4rem;
+  }
+  #msgInput, #sendBtn {
+    height: 2.5rem;
+    font-size: 0.85rem;
+  }
+}
+
+/* ===== MÓVILES GRANDES (481–768px) ===== */
+@media (min-width: 481px) and (max-width: 768px) {
+  #app {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+    height: 100vh;
+  }
+  .sidebar h1 {
+    font-size: 2.4rem;
+  }
+  .neon-input, .neon-btn {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.8rem;
+  }
+  #room-info, #mode-label, #status {
+    font-size: 0.9rem;
+  }
+  .chat-area {
+    flex: 1;
+  }
+  #messages {
+    padding: 0.75rem;
+  }
+  .message {
+    font-size: 0.9rem;
+    max-width: 80%;
+  }
+  .message-input {
+    position: sticky;
+    bottom: 0;
+    padding: 0.6rem;
+  }
+  #msgInput, #sendBtn {
+    height: 3rem;
+    font-size: 0.95rem;
+  }
+}
+
+/* ===== TABLETS (769–1024px) ===== */
+@media (min-width: 769px) and (max-width: 1024px) {
+  #app {
+    flex-direction: row;
+    padding: 1.5rem;
+    gap: 1.5rem;
+    height: 90vh;
+  }
+  .sidebar {
+    flex: 1;
+    max-width: 300px;
+  }
+  .sidebar h1 {
+    font-size: 2.6rem;
+  }
+  .neon-input, .neon-btn {
+    font-size: 1.05rem;
+    padding: 0.8rem 1rem;
+  }
+  #room-info, #mode-label, #status {
+    font-size: 0.95rem;
+  }
+  .chat-area {
+    flex: 2;
+  }
+  #messages {
+    padding: 1rem;
+  }
+  .message {
+    font-size: 1rem;
+    max-width: 75%;
+  }
+  .message-input {
+    padding: 0.8rem;
+  }
+  #msgInput, #sendBtn {
+    height: 3.2rem;
+    font-size: 1rem;
+  }
+}
+
+/* ===== DESKTOP (>1024px) – tus estilos actuales aplican aquí ===== */
