@@ -1,271 +1,174 @@
-<div align="center">
+# GhostChat
 
-# 👻 GhostChat
+**Plataforma de mensajería privada y comunicación en tiempo real**
 
-### Plataforma de mensajería privada y comunicación en tiempo real
-
-![Versión](https://img.shields.io/badge/Versión-1.0.0-blue?style=for-the-badge)
-![NodeJS](https://img.shields.io/badge/Node.js-18+-green?style=for-the-badge&logo=node.js)
-![Express](https://img.shields.io/badge/Express.js-4.18-black?style=for-the-badge&logo=express)
-![Socket.IO](https://img.shields.io/badge/Socket.IO-4.7-white?style=for-the-badge&logo=socket.io)
-![Licencia](https://img.shields.io/badge/Licencia-Educativa-orange?style=for-the-badge)
-
----
-
-*"La privacidad no consiste en esconder información; consiste en tener el control sobre ella."*
-
-</div>
+| | |
+|---|---|
+| Versión | 1.0.0 |
+| Runtime | Node.js 18+ |
+| Framework | Express.js 4.18 |
+| Comunicación en tiempo real | Socket.IO 4.7 |
+| Licencia | Educativa |
 
 ---
 
-# 📖 Tabla de Contenido
+## Tabla de contenido
 
-- Introducción
-- Objetivos
-- Descripción del proyecto
-- Características
-- Tecnologías utilizadas
-- Arquitectura del sistema
-- Estructura del proyecto
-- Instalación
-- Configuración
-- Funcionamiento
-- Comunicación en tiempo real
-- Seguridad
-- Rendimiento
-- Escalabilidad
-- Evaluación ISO/IEC 25010
-- Buenas prácticas implementadas
-- Futuras mejoras
-- Contribuciones
-- Licencia
-- Autor
+1. [Introducción](#introducción)
+2. [Objetivos](#objetivos)
+3. [Descripción del proyecto](#descripción-del-proyecto)
+4. [Características principales](#características-principales)
+5. [Tecnologías utilizadas](#tecnologías-utilizadas)
+6. [Arquitectura del sistema](#arquitectura-del-sistema)
+7. [Estructura del proyecto](#estructura-del-proyecto)
+8. [Instalación](#instalación)
+9. [Configuración](#configuración)
+10. [Funcionamiento y flujo de datos](#funcionamiento-y-flujo-de-datos)
+11. [Seguridad](#seguridad)
+12. [Rendimiento](#rendimiento)
+13. [Escalabilidad](#escalabilidad)
+14. [Evaluación de calidad (ISO/IEC 25010)](#evaluación-de-calidad-isoiec-25010)
+15. [Trabajo futuro](#trabajo-futuro)
+16. [Contribuciones](#contribuciones)
+17. [Licencia](#licencia)
+18. [Autor](#autor)
 
 ---
 
-# 📚 Introducción
+## Introducción
 
-GhostChat es una aplicación web de mensajería privada desarrollada utilizando tecnologías modernas del ecosistema JavaScript. Su objetivo principal es ofrecer un sistema de comunicación en tiempo real entre múltiples clientes mediante conexiones persistentes utilizando Socket.IO.
+GhostChat es una aplicación web de mensajería desarrollada sobre el ecosistema JavaScript, orientada a la comunicación en tiempo real entre múltiples clientes mediante conexiones persistentes basadas en Socket.IO.
 
-El proyecto fue concebido como una implementación práctica de una arquitectura Cliente-Servidor, donde un servidor desarrollado con Express administra las conexiones de los usuarios mientras Socket.IO permite el intercambio instantáneo de mensajes.
+El proyecto implementa una arquitectura cliente-servidor en la que un servidor construido con Express administra las conexiones entrantes, mientras que Socket.IO gestiona el intercambio bidireccional e inmediato de mensajes.
 
-A diferencia de las aplicaciones tradicionales que dependen exclusivamente del protocolo HTTP, GhostChat mantiene una conexión abierta entre el navegador y el servidor, reduciendo significativamente la latencia y mejorando la experiencia del usuario.
+A diferencia de las aplicaciones que dependen exclusivamente de solicitudes HTTP discretas, GhostChat mantiene una conexión abierta entre el navegador y el servidor durante toda la sesión, reduciendo la latencia y mejorando la experiencia del usuario final.
 
-El sistema fue diseñado siguiendo principios de simplicidad, modularidad y facilidad de mantenimiento, convirtiéndose en una excelente base para el aprendizaje de tecnologías relacionadas con aplicaciones en tiempo real.
-
----
-
-# 🎯 Objetivos
-
-## Objetivo General
-
-Desarrollar una plataforma de mensajería privada basada en tecnologías web modernas que permita la comunicación en tiempo real entre usuarios conectados, garantizando rapidez, escalabilidad y una arquitectura fácilmente mantenible.
+El sistema fue diseñado bajo principios de simplicidad, modularidad y mantenibilidad, con el propósito de servir como base de aprendizaje para el desarrollo de aplicaciones en tiempo real.
 
 ---
 
-## Objetivos Específicos
+## Objetivos
 
-- Implementar un servidor utilizando Express.js.
+### Objetivo general
 
+Desarrollar una plataforma de mensajería basada en tecnologías web modernas que permita la comunicación en tiempo real entre usuarios conectados, garantizando bajo tiempo de respuesta, escalabilidad y una arquitectura mantenible.
+
+### Objetivos específicos
+
+- Implementar un servidor HTTP utilizando Express.js.
 - Establecer comunicación bidireccional mediante Socket.IO.
-
-- Reducir la latencia durante el intercambio de mensajes.
-
-- Implementar mecanismos básicos de seguridad utilizando Helmet.
-
-- Proteger el servidor frente a solicitudes excesivas mediante Express Rate Limit.
-
-- Facilitar futuras ampliaciones del proyecto mediante una estructura sencilla.
-
-- Aplicar buenas prácticas de desarrollo utilizando Node.js.
-
-- Servir como proyecto académico para el estudio de arquitecturas cliente-servidor.
+- Minimizar la latencia en el intercambio de mensajes.
+- Incorporar mecanismos básicos de seguridad mediante Helmet.
+- Proteger el servidor frente a volúmenes excesivos de solicitudes mediante Express Rate Limit.
+- Diseñar una estructura de proyecto que facilite ampliaciones futuras.
+- Aplicar buenas prácticas de desarrollo con Node.js.
+- Servir como referencia académica para el estudio de arquitecturas cliente-servidor.
 
 ---
 
-# 📖 Descripción del Proyecto
+## Descripción del proyecto
 
-GhostChat es una aplicación web orientada a demostrar el funcionamiento interno de un sistema de mensajería instantánea.
+GhostChat demuestra el funcionamiento interno de un sistema de mensajería instantánea. El servidor administra todas las conexiones activas y distribuye los mensajes recibidos a los clientes correspondientes.
 
-El servidor es responsable de administrar todas las conexiones activas y distribuir los mensajes recibidos hacia los clientes correspondientes.
+Cada cliente mantiene una conexión persistente con el servidor mediante WebSockets, eliminando la necesidad de solicitudes HTTP repetidas. Este modelo permite que los mensajes se transmitan prácticamente en tiempo real.
 
-Cada cliente mantiene una conexión permanente con el servidor utilizando WebSockets, lo que elimina la necesidad de realizar solicitudes HTTP continuas.
-
-Gracias a este modelo de comunicación, los mensajes son enviados y recibidos prácticamente en tiempo real.
-
-El proyecto utiliza una arquitectura ligera que facilita tanto su comprensión como su mantenimiento, siendo apropiado para proyectos académicos, demostraciones y futuras ampliaciones.
+La arquitectura, deliberadamente ligera, facilita tanto la comprensión del código como su mantenimiento, siendo adecuada para proyectos académicos, demostraciones técnicas y futuras ampliaciones funcionales.
 
 ---
 
-# ⭐ Características Principales
+## Características principales
 
-## 💬 Comunicación en tiempo real
-
-Los mensajes se transmiten instantáneamente entre los usuarios mediante Socket.IO.
-
----
-
-## ⚡ Baja latencia
-
-La utilización de conexiones persistentes reduce considerablemente el tiempo necesario para enviar y recibir información.
-
----
-
-## 🌐 Plataforma Web
-
-La aplicación funciona directamente desde el navegador sin necesidad de instalar software adicional.
+| Característica | Descripción |
+|---|---|
+| Comunicación en tiempo real | Los mensajes se transmiten instantáneamente entre usuarios mediante Socket.IO. |
+| Baja latencia | Las conexiones persistentes reducen significativamente el tiempo de envío y recepción. |
+| Plataforma web | Funciona directamente desde el navegador, sin instalación de software adicional. |
+| Seguridad básica integrada | Protección mediante Helmet y Express Rate Limit. |
+| Arquitectura sencilla | Estructura clara que facilita la comprensión y modificación del código. |
+| Footprint reducido | Número mínimo de dependencias, lo que agiliza la instalación. |
+| Escalabilidad | La arquitectura permite incorporar nuevas funcionalidades sin reestructurar el sistema. |
 
 ---
 
-## 🔒 Seguridad básica integrada
+## Tecnologías utilizadas
 
-GhostChat implementa mecanismos de protección mediante Helmet y Express Rate Limit.
+### Backend
 
----
+**Node.js**
+Entorno de ejecución sobre el cual corre el servidor. Permite ejecutar JavaScript fuera del navegador y gestionar múltiples conexiones concurrentes.
 
-## 🧩 Arquitectura sencilla
-
-La organización del proyecto facilita la comprensión del código y futuras modificaciones.
-
----
-
-## 📦 Proyecto ligero
-
-El número reducido de dependencias permite una instalación rápida y sencilla.
-
----
-
-## 📈 Escalable
-
-Aunque actualmente es un proyecto compacto, la arquitectura permite incorporar nuevas funcionalidades sin necesidad de reestructurar completamente el sistema.
-
----
-
-# 🛠 Tecnologías Utilizadas
-
-## Backend
-
-### Node.js
-
-Entorno de ejecución utilizado para desarrollar el servidor.
-
-Permite ejecutar JavaScript fuera del navegador y gestionar múltiples conexiones simultáneamente.
-
----
-
-### Express.js
-
-Framework encargado de crear el servidor HTTP.
-
-Sus responsabilidades incluyen:
-
+**Express.js**
+Framework responsable de:
 - Administración de rutas.
 - Procesamiento de solicitudes.
 - Envío de respuestas.
-- Servir archivos estáticos.
+- Servicio de archivos estáticos.
 
----
-
-### Socket.IO
-
-Biblioteca utilizada para implementar comunicación en tiempo real entre servidor y clientes.
-
-Permite:
-
+**Socket.IO**
+Biblioteca utilizada para la comunicación en tiempo real entre servidor y clientes. Ofrece:
 - Comunicación bidireccional.
 - Eventos personalizados.
 - Reconexión automática.
 - Baja latencia.
 
----
+**Helmet**
+Middleware de seguridad que configura automáticamente cabeceras HTTP para mitigar riesgos comunes, entre ellas:
+- `X-Frame-Options`
+- `Referrer-Policy`
+- `X-Content-Type-Options`
 
-### Helmet
-
-Middleware de seguridad encargado de configurar automáticamente diferentes cabeceras HTTP para reducir riesgos comunes en aplicaciones web.
-
-Entre ellas:
-
-- X-Frame-Options
-- Referrer Policy
-- X-Content-Type-Options
-
----
-
-### Express Rate Limit
-
-Protege el servidor limitando la cantidad de solicitudes que un cliente puede realizar durante un periodo determinado.
-
-Esto ayuda a prevenir:
-
+**Express Rate Limit**
+Limita la cantidad de solicitudes por cliente en un intervalo determinado, ayudando a prevenir:
 - Ataques de fuerza bruta.
 - Consumo excesivo de recursos.
 - Denegación de servicio básica.
 
----
+**UUID**
+Genera identificadores únicos universales, evitando colisiones al identificar entidades dentro del sistema.
 
-### UUID
+### Frontend
 
-Biblioteca utilizada para generar identificadores únicos universalmente.
-
-Su utilización evita colisiones al crear identificadores dentro de la aplicación.
-
----
-
-# 🎨 Tecnologías del Frontend
-
-El cliente está desarrollado utilizando tecnologías estándar del desarrollo web.
+El cliente se desarrolla con tecnologías estándar del ecosistema web:
 
 - HTML5
 - CSS3
 - JavaScript
 
-Esto permite que GhostChat pueda ejecutarse en cualquier navegador moderno sin necesidad de instalar complementos adicionales.
+Esto garantiza compatibilidad con cualquier navegador moderno, sin necesidad de complementos adicionales.
 
 ---
 
-# 🏛 Arquitectura del Sistema
+## Arquitectura del sistema
 
-GhostChat implementa una arquitectura Cliente-Servidor.
-
-El navegador actúa como cliente mientras Express administra todas las conexiones.
-
-Socket.IO se encarga de mantener una comunicación permanente entre ambas partes.
+GhostChat implementa una arquitectura cliente-servidor. El navegador actúa como cliente, Express gestiona las conexiones entrantes y Socket.IO mantiene la comunicación persistente entre ambas partes.
 
 ```
-
                      INTERNET
-
-                          │
-
-              ┌──────────────────────┐
-              │      Cliente         │
-              │ HTML CSS JavaScript  │
-              └──────────┬───────────┘
-                         │
-                  HTTP / WebSocket
-                         │
-              ┌──────────▼───────────┐
-              │      Express.js      │
-              │       Servidor       │
-              └──────────┬───────────┘
-                         │
-                   Eventos Socket.IO
-                         │
-              ┌──────────▼───────────┐
-              │ Usuarios Conectados  │
-              └──────────────────────┘
-
+                        │
+             ┌──────────────────────┐
+             │       Cliente        │
+             │ HTML · CSS · JavaScript │
+             └──────────┬───────────┘
+                        │
+                 HTTP / WebSocket
+                        │
+             ┌──────────▼───────────┐
+             │      Express.js      │
+             │       Servidor       │
+             └──────────┬───────────┘
+                        │
+                  Eventos Socket.IO
+                        │
+             ┌──────────▼───────────┐
+             │  Usuarios conectados │
+             └──────────────────────┘
 ```
 
-La comunicación permanece abierta durante toda la sesión del usuario, permitiendo el intercambio inmediato de información.
+La conexión permanece abierta durante toda la sesión del usuario, permitiendo el intercambio inmediato de información.
 
 ---
 
----
-
-# 📁 Estructura del Proyecto
-
-La organización del proyecto fue diseñada para separar claramente los recursos del cliente de la lógica del servidor, facilitando su mantenimiento y futuras ampliaciones.
+## Estructura del proyecto
 
 ```text
 ghostchat/
@@ -284,54 +187,19 @@ ghostchat/
 └── index.html
 ```
 
----
+### `public/`
+Contiene los archivos servidos directamente al navegador: interfaces HTML, hojas de estilo y recursos estáticos del cliente.
 
-# 📂 Descripción de cada directorio
-
-## 📁 public/
-
-Esta carpeta contiene todos los archivos públicos que son enviados directamente al navegador.
-
-En ella se encuentran:
-
-- Interfaces HTML.
-- Hojas de estilo CSS.
-- Recursos utilizados por el cliente.
-- Archivos estáticos.
-
-Todo el contenido de esta carpeta puede ser servido directamente por Express.
-
----
-
-## 📁 server/
-
-Esta carpeta contiene el núcleo de la aplicación.
-
-Dentro de ella se encuentra el archivo:
-
-```
-index.js
-```
-
-Este archivo es responsable de:
-
+### `server/`
+Contiene el núcleo de la aplicación. El archivo `index.js` es responsable de:
 - Inicializar Express.
 - Configurar el servidor HTTP.
 - Inicializar Socket.IO.
 - Gestionar las conexiones de los clientes.
-- Recibir eventos.
-- Enviar mensajes.
-- Mantener activa la comunicación en tiempo real.
+- Recibir y distribuir eventos y mensajes.
 
-En otras palabras, representa el corazón de GhostChat.
-
----
-
-## 📄 package.json
-
-Este archivo contiene la configuración principal del proyecto.
-
-Actualmente define:
+### `package.json`
+Define la configuración principal del proyecto:
 
 ```json
 {
@@ -342,648 +210,217 @@ Actualmente define:
 }
 ```
 
-También especifica las dependencias necesarias para ejecutar la aplicación.
+### `package-lock.json`
+Generado automáticamente por npm; fija las versiones exactas de cada dependencia instalada para garantizar reproducibilidad entre entornos. No debe modificarse manualmente.
 
 ---
 
-## 📄 package-lock.json
+## Instalación
 
-Este archivo es generado automáticamente por npm.
-
-Su función consiste en fijar exactamente las versiones instaladas de cada dependencia para garantizar que el proyecto funcione de la misma manera en diferentes equipos.
-
-No debe modificarse manualmente.
-
----
-
-# 🚀 Instalación
-
-GhostChat ha sido diseñado para instalarse en pocos minutos.
-
-## Paso 1
-
-Clonar el repositorio.
+**1. Clonar el repositorio**
 
 ```bash
 git clone https://github.com/KAAL-38583/ghostchat.git
 ```
 
----
-
-## Paso 2
-
-Ingresar al directorio.
+**2. Acceder al directorio del proyecto**
 
 ```bash
 cd ghostchat
 ```
 
----
-
-## Paso 3
-
-Instalar todas las dependencias.
+**3. Instalar dependencias**
 
 ```bash
 npm install
 ```
 
-Durante este proceso npm descargará automáticamente todas las librerías necesarias para ejecutar el proyecto.
-
----
-
-## Paso 4
-
-Iniciar el servidor.
+**4. Iniciar el servidor**
 
 ```bash
 npm start
 ```
 
-El comando ejecutará automáticamente:
+Este comando ejecuta `server/index.js`.
 
-```
-server/index.js
-```
-
----
-
-# 🌐 Acceso desde el navegador
-
-Una vez iniciado el servidor, abra su navegador preferido.
-
-Ingrese la dirección correspondiente al puerto configurado.
-
-Generalmente:
+**5. Acceder desde el navegador**
 
 ```
 http://localhost:3000
 ```
 
-o
+o, alternativamente:
 
 ```
 http://127.0.0.1:3000
 ```
 
-Dependiendo de la configuración utilizada.
+(la dirección exacta depende de la configuración del entorno).
 
 ---
 
-# ⚙ Configuración del Proyecto
+## Configuración
 
-Actualmente GhostChat posee una configuración sencilla.
-
-El punto de entrada está definido mediante:
+El punto de entrada del proyecto está definido mediante:
 
 ```json
 "main": "server/index.js"
 ```
 
-y el script principal es:
+y el script de arranque:
 
 ```json
 "scripts": {
-    "start": "node server/index.js"
+  "start": "node server/index.js"
 }
 ```
 
-Esto permite iniciar toda la aplicación simplemente ejecutando:
+Esto permite iniciar la aplicación completa con un único comando: `npm start`.
 
-```bash
-npm start
+### Dependencias principales
+
+| Paquete | Función |
+|---|---|
+| Express | Servidor HTTP: rutas, archivos estáticos, procesamiento de solicitudes. |
+| Socket.IO | Comunicación bidireccional en tiempo real, con reconexión automática. |
+| Helmet | Cabeceras HTTP de seguridad (clickjacking, MIME sniffing, referrer policy). |
+| Express Rate Limit | Control de volumen de solicitudes por cliente. |
+| UUID | Generación de identificadores únicos para usuarios, mensajes y sesiones. |
+
+---
+
+## Funcionamiento y flujo de datos
+
+### Flujo general
+
+```text
+Usuario → Abre la aplicación → Carga del frontend → Conexión con Express
+→ Inicialización de Socket.IO → Conexión establecida → Usuario envía mensaje
+→ Servidor recibe el evento → Procesamiento → Distribución del mensaje
+→ Todos los clientes reciben la actualización
 ```
 
----
+### Comunicación mediante Socket.IO
 
-# 📦 Dependencias
+GhostChat utiliza una arquitectura basada en eventos: cada acción del usuario genera un evento que viaja al servidor, es procesado y posteriormente distribuido a los demás clientes conectados. Este mecanismo reduce el número de solicitudes HTTP y mejora la velocidad de comunicación.
 
-GhostChat utiliza únicamente las librerías necesarias para ofrecer una aplicación ligera y eficiente.
+```text
+Cliente A ── socket.emit() ──► Servidor Express ── procesamiento ──►
+socket.broadcast() ──► Cliente B / Cliente C / Cliente D
+```
 
-## Express
+### Ciclo de vida de un mensaje
 
-Express es el framework utilizado para construir el servidor HTTP.
+1. El usuario redacta un mensaje.
+2. El navegador detecta la acción.
+3. El cliente emite el mensaje mediante Socket.IO.
+4. El servidor recibe el evento.
+5. El servidor valida la información.
+6. El servidor distribuye el mensaje.
+7. Los demás clientes reciben la actualización.
+8. La interfaz renderiza el nuevo mensaje.
 
-Permite:
-
-- Crear rutas.
-- Servir archivos.
-- Procesar solicitudes.
-- Enviar respuestas.
-
----
-
-## Socket.IO
-
-Socket.IO implementa comunicación bidireccional en tiempo real.
-
-Gracias a esta tecnología los mensajes son enviados instantáneamente entre usuarios.
-
-Entre sus ventajas destacan:
-
-- Reconexión automática.
-- Comunicación basada en eventos.
-- Baja latencia.
-- Compatibilidad con múltiples navegadores.
+Este ciclo se completa en milisegundos, ofreciendo una experiencia fluida al usuario.
 
 ---
 
-## Helmet
+## Seguridad
 
-Helmet fortalece la seguridad del servidor configurando automáticamente múltiples cabeceras HTTP.
+Aunque GhostChat es un proyecto de carácter educativo, incorpora mecanismos básicos orientados a reducir riesgos comunes en aplicaciones web.
 
-Entre las protecciones que ofrece destacan:
+**Helmet** configura automáticamente cabeceras HTTP de seguridad, reduciendo la superficie de ataque sin requerir configuración manual. Entre las protecciones implementadas:
 
-- Prevención de Clickjacking.
-- Protección frente a ataques MIME.
-- Configuración de políticas de referencia.
+- Prevención de clickjacking.
+- Mitigación de MIME sniffing.
+- Configuración de políticas de referencia (Referrer Policy).
 - Restricción de contenido potencialmente inseguro.
 
----
+**Express Rate Limit** restringe el número de solicitudes que un cliente puede realizar en un intervalo determinado, mitigando ataques de fuerza bruta, denegación de servicio básica y consumo excesivo de recursos.
 
-## Express Rate Limit
+**Socket.IO** mantiene la conexión abierta durante toda la sesión, reduciendo tráfico HTTP y mejorando la velocidad de respuesta frente al modelo tradicional basado en solicitudes discretas.
 
-Este middleware controla la cantidad de solicitudes permitidas por cliente.
+**UUID** garantiza identificadores únicos, evitando colisiones al referenciar entidades del sistema.
 
-Su objetivo es evitar:
-
-- Ataques por fuerza bruta.
-- Saturación del servidor.
-- Consumo excesivo de recursos.
-
----
-
-## UUID
-
-UUID genera identificadores únicos.
-
-Estos identificadores pueden utilizarse para:
-
-- Usuarios.
-- Conversaciones.
-- Mensajes.
-- Sesiones.
-
----
-
-# 🔄 Flujo General del Sistema
-
-El funcionamiento general de GhostChat puede resumirse de la siguiente manera.
-
-```text
-Usuario
-
-↓
-
-Abre la aplicación
-
-↓
-
-Carga del Frontend
-
-↓
-
-Conexión con Express
-
-↓
-
-Inicialización de Socket.IO
-
-↓
-
-Conexión establecida
-
-↓
-
-Usuario escribe un mensaje
-
-↓
-
-Servidor recibe el evento
-
-↓
-
-Procesamiento
-
-↓
-
-Distribución del mensaje
-
-↓
-
-Todos los clientes reciben la actualización
-```
-
----
-
-# 📡 Comunicación mediante Socket.IO
-
-GhostChat utiliza una arquitectura basada en eventos.
-
-Cada vez que un usuario realiza una acción, se genera un evento que viaja hasta el servidor.
-
-El servidor procesa la información y posteriormente distribuye dicho evento a los demás clientes conectados.
-
-Este mecanismo reduce considerablemente el número de solicitudes HTTP y mejora la velocidad de comunicación.
-
-```text
-Cliente A
-
-        │
-
-socket.emit()
-
-        │
-
-        ▼
-
-Servidor Express
-
-        │
-
-Procesamiento
-
-        │
-
-socket.broadcast()
-
-        │
-
-        ▼
-
-Cliente B
-
-Cliente C
-
-Cliente D
-```
-
----
-
-# 💬 Ciclo de vida de un mensaje
-
-Cada mensaje enviado sigue el siguiente proceso:
-
-1. El usuario escribe un mensaje.
-
-2. El navegador detecta la acción.
-
-3. JavaScript envía el mensaje mediante Socket.IO.
-
-4. El servidor recibe el evento.
-
-5. El servidor valida la información.
-
-6. El servidor distribuye el mensaje.
-
-7. Los demás clientes reciben la actualización.
-
-8. La interfaz muestra el nuevo mensaje en tiempo real.
-
-Este proceso ocurre en cuestión de milisegundos, ofreciendo una experiencia fluida al usuario.
----
-
-# 🔒 Seguridad
-
-La seguridad constituye uno de los aspectos más importantes en cualquier aplicación que maneje comunicación entre usuarios. Aunque GhostChat es un proyecto de carácter educativo, incorpora mecanismos básicos que ayudan a reducir riesgos comunes presentes en aplicaciones web.
-
-El servidor implementa diferentes capas de protección que fortalecen la comunicación entre cliente y servidor.
-
-## Helmet
-
-GhostChat utiliza **Helmet**, un middleware especializado en configurar automáticamente diferentes cabeceras HTTP de seguridad.
-
-Su objetivo es disminuir la superficie de ataque de la aplicación sin necesidad de configurar manualmente cada encabezado.
-
-Entre las protecciones implementadas se encuentran:
-
-- Protección contra Clickjacking.
-- Prevención del MIME Sniffing.
-- Configuración de políticas de referencia (Referrer Policy).
-- Restricción del contenido inseguro.
-- Protección frente a algunas vulnerabilidades del navegador.
-
-El uso de Helmet representa una buena práctica ampliamente utilizada en aplicaciones desarrolladas con Express.
-
----
-
-## Express Rate Limit
-
-Para evitar abusos sobre el servidor se implementa **Express Rate Limit**.
-
-Este middleware limita la cantidad de solicitudes que un cliente puede realizar dentro de un intervalo de tiempo determinado.
-
-Sus beneficios incluyen:
-
-- Protección frente a ataques de fuerza bruta.
-- Reducción del riesgo de ataques de denegación de servicio básicos.
-- Disminución del consumo innecesario de recursos.
-- Mayor estabilidad del servidor.
-
----
-
-## Comunicación mediante Socket.IO
-
-Socket.IO mantiene una conexión persistente entre cliente y servidor.
-
-A diferencia del modelo tradicional basado únicamente en HTTP, la comunicación permanece abierta durante toda la sesión del usuario.
-
-Esto permite:
-
-- Reducir la latencia.
-- Disminuir el tráfico HTTP.
-- Mejorar la velocidad de respuesta.
-- Mantener sincronizados todos los clientes.
-
----
-
-## Generación de Identificadores
-
-GhostChat incorpora la biblioteca **UUID**, la cual permite generar identificadores únicos universalmente.
-
-El uso de identificadores únicos evita conflictos cuando es necesario identificar elementos del sistema.
-
----
-
-# 🛡️ Recomendaciones de Seguridad
-
-Aunque GhostChat implementa mecanismos básicos de protección, existen múltiples mejoras que podrían incorporarse en futuras versiones.
-
-Entre ellas:
+### Recomendaciones para versiones futuras
 
 - Autenticación mediante JWT.
 - Autenticación multifactor (MFA).
-- Cifrado de extremo a extremo (End-to-End Encryption).
+- Cifrado de extremo a extremo (E2EE).
 - Implementación de HTTPS.
-- Cookies seguras.
-- Protección CSRF.
-- Validación avanzada de entradas.
-- Sanitización de datos.
-- Registro de auditoría.
-- Gestión de sesiones.
-- Recuperación segura de cuentas.
-
-Estas mejoras incrementarían significativamente el nivel de seguridad del sistema.
+- Cookies seguras y protección CSRF.
+- Validación y sanitización avanzada de entradas.
+- Registro de auditoría y gestión de sesiones.
+- Mecanismos de recuperación segura de cuentas.
 
 ---
 
-# ⚡ Rendimiento
+## Rendimiento
 
-GhostChat ha sido diseñado para ofrecer una comunicación rápida entre múltiples clientes.
-
-La utilización de Socket.IO elimina la necesidad de realizar consultas HTTP repetitivas, reduciendo considerablemente el tiempo de respuesta.
-
-Entre los beneficios obtenidos se encuentran:
+El uso de Socket.IO elimina la necesidad de solicitudes HTTP repetitivas, reduciendo el tiempo de respuesta. Beneficios observados:
 
 - Comunicación inmediata.
-- Menor utilización del ancho de banda.
+- Menor utilización de ancho de banda.
 - Reducción de solicitudes HTTP.
-- Baja latencia.
-- Mayor fluidez durante la conversación.
+- Baja latencia general.
 
-Al tratarse de una arquitectura basada en eventos, el servidor únicamente procesa información cuando realmente ocurre una acción dentro del sistema.
-
-Esto contribuye a optimizar el uso de recursos del servidor.
+Al tratarse de una arquitectura basada en eventos, el servidor procesa información únicamente cuando ocurre una acción concreta, optimizando el uso de recursos.
 
 ---
 
-# 📈 Escalabilidad
+## Escalabilidad
 
-La arquitectura implementada facilita la incorporación de nuevas funcionalidades sin modificar completamente el proyecto.
+La arquitectura actual facilita la incorporación progresiva de nuevas funcionalidades sin requerir una reestructuración completa del proyecto. Posibles ampliaciones incluyen:
 
-Entre las posibles ampliaciones destacan:
-
-- Registro de usuarios.
-- Inicio de sesión.
-- Base de datos.
-- Chats privados.
-- Chats grupales.
-- Estados de conexión.
-- Indicador "Escribiendo...".
-- Compartición de archivos.
-- Compartición de imágenes.
-- Mensajes de voz.
-- Videollamadas.
-- Llamadas VoIP.
-- Notificaciones Push.
-- Aplicación móvil.
-- Aplicación de escritorio.
-
-Gracias a Express y Socket.IO estas funcionalidades pueden incorporarse progresivamente.
+- Registro e inicio de sesión de usuarios.
+- Persistencia en base de datos.
+- Chats privados y grupales.
+- Estados de conexión e indicador de "escribiendo...".
+- Compartición de archivos e imágenes.
+- Mensajes de voz y videollamadas (VoIP).
+- Notificaciones push.
+- Clientes móviles y de escritorio.
 
 ---
 
-# 📊 Evaluación de Calidad según ISO/IEC 25010
+## Evaluación de calidad (ISO/IEC 25010)
 
-La norma **ISO/IEC 25010** establece un conjunto de características que permiten evaluar objetivamente la calidad de un producto software.
+La norma ISO/IEC 25010 define un conjunto de características para evaluar objetivamente la calidad de un producto software. A continuación se presenta la evaluación de GhostChat conforme a dicho estándar.
 
-GhostChat puede analizarse utilizando dichas características.
+| Característica | Evaluación | Nivel |
+|---|---|:---:|
+| Adecuación funcional | Cumple el objetivo principal mediante comunicación en tiempo real; pendiente autenticación e historial de conversaciones. | ⭐⭐⭐⭐☆ |
+| Eficiencia del desempeño | Baja latencia gracias a Socket.IO; pendiente balanceo de carga y caché. | ⭐⭐⭐⭐☆ |
+| Compatibilidad | Funciona en Chrome, Firefox, Edge, Opera y Brave. | ⭐⭐⭐⭐⭐ |
+| Usabilidad | Interfaz sencilla; pendiente accesibilidad, modo oscuro y diseño responsive. | ⭐⭐⭐⭐☆ |
+| Fiabilidad | Reconexión automática de Socket.IO; pendiente persistencia de mensajes y registro de errores. | ⭐⭐⭐⭐☆ |
+| Seguridad | Helmet, Rate Limit y UUID implementados; pendiente JWT, HTTPS, E2EE y MFA. | ⭐⭐⭐☆☆ |
+| Mantenibilidad | Código reducido y organizado; pendiente separación por módulos, controladores y servicios. | ⭐⭐⭐⭐☆ |
+| Portabilidad | Compatible con Windows, Linux y macOS. | ⭐⭐⭐⭐⭐ |
 
----
+### Conclusión de la evaluación
 
-## 1. Adecuación Funcional
+GhostChat constituye una base sólida para una plataforma de mensajería en tiempo real. Su arquitectura ligera, sustentada en Express.js y Socket.IO, junto con mecanismos básicos de seguridad como Helmet y Express Rate Limit, permite ofrecer una aplicación funcional, rápida y de fácil mantenimiento.
 
-### Descripción
-
-Evalúa si el sistema cumple correctamente con las funciones para las cuales fue desarrollado.
-
-### Evaluación
-
-GhostChat permite la comunicación en tiempo real entre clientes mediante Socket.IO, cumpliendo adecuadamente con el objetivo principal del proyecto.
-
-### Fortalezas
-
-- Comunicación inmediata.
-- Arquitectura funcional.
-- Intercambio de mensajes.
-
-### Oportunidades de mejora
-
-- Autenticación.
-- Historial de conversaciones.
-- Gestión de usuarios.
-
-**Nivel estimado:** ⭐⭐⭐⭐☆
+Existen oportunidades de mejora relevantes, particularmente en autenticación, cifrado y persistencia de datos. No obstante, el proyecto cumple adecuadamente su propósito académico y constituye una base apropiada para evolucionar hacia una plataforma de comunicación más robusta.
 
 ---
 
-## 2. Eficiencia del Desempeño
+## Trabajo futuro
 
-### Descripción
+- Implementación de autenticación y gestión de usuarios.
+- Persistencia de mensajes en base de datos.
+- Cifrado de extremo a extremo.
+- Soporte para archivos multimedia.
+- Aplicaciones cliente móviles y de escritorio.
 
-Analiza el comportamiento del sistema respecto al consumo de recursos y tiempos de respuesta.
+## Contribuciones
 
-### Evaluación
+Las contribuciones son bienvenidas mediante *pull requests*. Para cambios significativos, se recomienda abrir primero un *issue* para discutir la propuesta.
 
-El uso de Socket.IO reduce considerablemente la latencia y evita solicitudes HTTP constantes.
+## Licencia
 
-### Fortalezas
+Proyecto de carácter educativo.
 
-- Baja latencia.
-- Comunicación persistente.
-- Menor tráfico HTTP.
+## Autor
 
-### Oportunidades
-
-- Balanceo de carga.
-- Caché.
-- Optimización para miles de usuarios.
-
-**Nivel estimado:** ⭐⭐⭐⭐☆
-
----
-
-## 3. Compatibilidad
-
-### Descripción
-
-Evalúa la capacidad del sistema para funcionar correctamente junto con otros componentes y plataformas.
-
-### Evaluación
-
-GhostChat puede ejecutarse desde cualquier navegador moderno compatible con JavaScript.
-
-### Compatibilidad
-
-- Google Chrome
-- Mozilla Firefox
-- Microsoft Edge
-- Opera
-- Brave
-
-**Nivel estimado:** ⭐⭐⭐⭐⭐
-
----
-
-## 4. Usabilidad
-
-### Descripción
-
-Mide la facilidad con la que los usuarios interactúan con la aplicación.
-
-### Evaluación
-
-La interfaz es sencilla y facilita el envío y recepción de mensajes.
-
-### Oportunidades
-
-- Mejorar accesibilidad.
-- Incorporar modo oscuro.
-- Mejorar diseño responsive.
-
-**Nivel estimado:** ⭐⭐⭐⭐☆
-
----
-
-## 5. Fiabilidad
-
-### Descripción
-
-Evalúa la estabilidad del sistema durante su funcionamiento.
-
-### Evaluación
-
-Socket.IO incorpora mecanismos de reconexión automática que favorecen la continuidad del servicio.
-
-### Oportunidades
-
-- Persistencia de mensajes.
-- Recuperación automática.
-- Registro de errores.
-
-**Nivel estimado:** ⭐⭐⭐⭐☆
-
----
-
-## 6. Seguridad
-
-### Descripción
-
-Evalúa la protección de la información y el acceso al sistema.
-
-### Evaluación
-
-Actualmente GhostChat incorpora:
-
-- Helmet.
-- Express Rate Limit.
-- UUID.
-
-### Mejoras recomendadas
-
-- JWT.
-- HTTPS.
-- E2EE.
-- MFA.
-
-**Nivel estimado:** ⭐⭐⭐☆☆
-
----
-
-## 7. Mantenibilidad
-
-### Descripción
-
-Evalúa la facilidad para modificar el sistema.
-
-### Evaluación
-
-La estructura del proyecto es simple y organizada.
-
-### Fortalezas
-
-- Código reducido.
-- Fácil comprensión.
-- Dependencias limitadas.
-
-### Mejoras
-
-- Separación por módulos.
-- Controladores.
-- Servicios.
-- Middleware personalizado.
-
-**Nivel estimado:** ⭐⭐⭐⭐☆
-
----
-
-## 8. Portabilidad
-
-### Descripción
-
-Mide la facilidad para instalar y ejecutar el software en diferentes plataformas.
-
-### Evaluación
-
-GhostChat puede ejecutarse en cualquier sistema operativo compatible con Node.js.
-
-### Plataformas compatibles
-
-- Windows.
-- Linux.
-- macOS.
-
-**Nivel estimado:** ⭐⭐⭐⭐⭐
-
----
-
-# 📋 Resumen General
-
-| Característica | Evaluación |
-|----------------|------------|
-| Adecuación Funcional | ⭐⭐⭐⭐☆ |
-| Eficiencia del Desempeño | ⭐⭐⭐⭐☆ |
-| Compatibilidad | ⭐⭐⭐⭐⭐ |
-| Usabilidad | ⭐⭐⭐⭐☆ |
-| Fiabilidad | ⭐⭐⭐⭐☆ |
-| Seguridad | ⭐⭐⭐☆☆ |
-| Mantenibilidad | ⭐⭐⭐⭐☆ |
-| Portabilidad | ⭐⭐⭐⭐⭐ |
-
----
-
-## Conclusión
-
-GhostChat constituye una base sólida para una plataforma de mensajería en tiempo real. Su arquitectura ligera, el uso de Express.js y Socket.IO, junto con la incorporación de mecanismos básicos de seguridad como Helmet y Express Rate Limit, permiten ofrecer una aplicación funcional, rápida y fácil de mantener.
-
-Aunque existen oportunidades de mejora, especialmente en aspectos relacionados con autenticación, cifrado y persistencia de datos, el proyecto cumple adecuadamente con su propósito educativo y proporciona una excelente base para continuar evolucionando hacia una aplicación de comunicación más robusta.
+*(Completar con los datos del autor o equipo de desarrollo.)*
